@@ -1,0 +1,72 @@
+# Python 3.14 SEM GIL (freethreading)
+# Compilando Python 3.14 com --disable-gil (freethreading)
+
+FROM ubuntu:22.04
+
+# Evitar prompts interativos durante instalação
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instalar dependências do sistema para compilar Python
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    build-essential \
+    zlib1g-dev \
+    libncurses5-dev \
+    libgdbm-dev \
+    libnss3-dev \
+    libssl-dev \
+    libreadline-dev \
+    libffi-dev \
+    libsqlite3-dev \
+    wget \
+    libbz2-dev \
+    liblzma-dev \
+    tk-dev \
+    uuid-dev \
+    libzstd-dev \
+    git \
+    vim  \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Baixar e compilar Python 3.14 SEM GIL (freethreading)
+RUN cd /tmp && \
+    wget https://www.python.org/ftp/python/3.14.0/Python-3.14.0rc3.tgz && \
+    tar -xzf Python-3.14.0rc3.tgz && \
+    cd Python-3.14.0rc3 && \
+    # Configurar SEM GIL (com --disable-gil)
+    ./configure --prefix=/usr/local --disable-gil --enable-optimizations --with-ensurepip=install && \
+    make -j$(nproc) && \
+    make install && \
+    # Verificar instalação
+    /usr/local/bin/python3.14 -VV && \
+    # Verificar que GIL está desabilitado (deve mostrar False)
+    /usr/local/bin/python3.14 -c "import sys; print('GIL enabled:', sys._is_gil_enabled())" && \
+    cd / && rm -rf /tmp/Python-3.14.0rc3.tgz /tmp/Python-3.14.0rc3
+
+# Definir variáveis de ambiente
+ENV PYTHON_VERSION=3.14-nogil
+ENV PYTHON_BIN=/usr/local/bin/python3.14
+ENV PATH="/usr/local/bin:${PATH}"
+ENV PYTHON_GIL=0
+ENV SCALE_FACTOR=1.0
+
+# Criar aliases
+RUN echo 'alias python=python3.14' >> /root/.bashrc && \
+    echo 'alias python3=python3.14' >> /root/.bashrc && \
+    echo 'alias pip=pip3.14' >> /root/.bashrc
+
+# Clonar e configurar o benchmark
+RUN cd /root && \
+    git clone https://github.com/gabrielranulfo/polars-benchmark.git && \
+    cd polars-benchmark && \
+    git checkout artigo_nogil && \
+    pip3.14 install -r requirements.in && \
+    chmod +x run.sh && \
+    echo 'export SCALE_FACTOR=1.0' >> /root/.bashrc
+
+# Diretório de trabalho
+WORKDIR /root/polars-benchmark
+
+# Comando padrão - manter container rodando
+CMD ["/bin/bash"]
+
