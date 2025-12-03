@@ -6,6 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile.python314-gil
     container_name: python314-gil
+    volumes:
+      - ./output-gil:/root/polars-benchmark/output
     environment:
       - PYTHON_VERSION=3.14-gil
       - PYTHON_BIN=/usr/local/bin/python3.14
@@ -22,6 +24,8 @@ services:
       context: .
       dockerfile: Dockerfile.python314-nogil
     container_name: python314-nogil
+    volumes:
+      - ./output-nogil:/root/polars-benchmark/output
     environment:
       - PYTHON_VERSION=3.14-nogil
       - PYTHON_BIN=/usr/local/bin/python3.14

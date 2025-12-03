@@ -61,6 +61,7 @@ RUN cd /root && \
     cd polars-benchmark && \
     git checkout artigo_nogil && \
     pip3.14 install -r requirements.in && \
+    pip3.14 install psutil && \
     chmod +x run.sh && \
     echo 'export SCALE_FACTOR=1.0' >> /root/.bashrc
 

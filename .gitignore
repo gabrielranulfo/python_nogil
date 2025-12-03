@@ -1,5 +1,7 @@
 results/
 logs/
+output-gil/
+output-nogil/
 venv/
 env/
 .venv
