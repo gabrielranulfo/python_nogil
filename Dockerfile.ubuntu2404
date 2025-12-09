@@ -1,18 +1,18 @@
-# Base: Ubuntu 24.04
-FROM ubuntu:24.04
+# Base: Ubuntu 22.04 (necessário para Python 3.11)
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Adicionar repositório Deadsnakes (que contém Python 3.13)
+# Adicionar repositório Deadsnakes
 RUN apt-get update && apt-get install -y software-properties-common \
     && add-apt-repository ppa:deadsnakes/ppa -y \
     && apt-get update
 
-# Instalar Python 3.13 + dependências
+# Instalar Python 3.11 + dependências
 RUN apt-get install -y --no-install-recommends \
-    python3.13 \
-    python3.13-dev \
-    python3.13-venv \
+    python3.11 \
+    python3.11-dev \
+    python3.11-venv \
     python3-pip \
     build-essential \
     git \
@@ -28,14 +28,10 @@ RUN apt-get install -y --no-install-recommends \
     zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Garantir que python aponta para python3.13
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1 \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3.13 1
+# Garantir que python aponta para python3.11
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
 
-# Atualizar pip
-RUN python3.13 -m pip install --upgrade pip
-
-# Variáveis de ambiente
 ENV SCALE_FACTOR=1.0
 
 # Clonar repositório
@@ -44,6 +40,7 @@ RUN cd /root && \
     cd polars-benchmark && \
     git checkout mestrado && \
     pip install -r requirements.in && \
+    pip install psutil && \
     chmod +x run.sh
 
 WORKDIR /root/polars-benchmark
