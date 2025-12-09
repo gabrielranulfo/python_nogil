@@ -1,11 +1,15 @@
 # Base: Ubuntu 24.04
 FROM ubuntu:24.04
 
-# Evitar prompts interativos
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Instalar Python 3.13 + pip + ferramentas essenciais
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Adicionar repositório Deadsnakes (que contém Python 3.13)
+RUN apt-get update && apt-get install -y software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa -y \
+    && apt-get update
+
+# Instalar Python 3.13 + dependências
+RUN apt-get install -y --no-install-recommends \
     python3.13 \
     python3.13-dev \
     python3.13-venv \
@@ -24,27 +28,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Garantir que python3 aponta para python3.13
+# Garantir que python aponta para python3.13
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1 \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.13 1
 
 # Atualizar pip
-RUN pip3 install --upgrade pip
+RUN python3.13 -m pip install --upgrade pip
 
-# Variáveis de ambiente para seu benchmark
+# Variáveis de ambiente
 ENV SCALE_FACTOR=1.0
 
-# Clonar o repositório e instalar dependências
+# Clonar repositório
 RUN cd /root && \
     git clone https://github.com/gabrielranulfo/polars-benchmark.git && \
     cd polars-benchmark && \
     git checkout mestrado && \
     pip install -r requirements.in && \
-    chmod +x run.sh && \
-    echo 'export SCALE_FACTOR=1.0' >> /root/.bashrc
+    chmod +x run.sh
 
-# Diretório de trabalho
 WORKDIR /root/polars-benchmark
 
-# Comando padrão
 CMD ["/bin/bash"]
