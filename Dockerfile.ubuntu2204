@@ -38,7 +38,7 @@ RUN cd /root && \
     cd polars-benchmark && \
     git checkout mestrado && \
     pip install -r requirements.in && \
-    pip install psutil && \
+    pip install psutil polars-lts-cpu && \
     chmod +x run.sh
 
 WORKDIR /root/polars-benchmark
