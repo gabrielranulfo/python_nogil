@@ -9,7 +9,11 @@
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
 
-# docker compose down --rmi all --volumes --remove-orphans
+#docker system prune -a --volumes
+
+#docker compose down --rmi all --volumes --remove-orphans
+
+#docker compose build --force-rm
 
 docker compose build
 

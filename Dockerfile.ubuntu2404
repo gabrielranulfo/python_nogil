@@ -1,14 +1,11 @@
-# Base: Ubuntu 22.04 (necessário para Python 3.11)
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Adicionar repositório Deadsnakes
 RUN apt-get update && apt-get install -y software-properties-common \
     && add-apt-repository ppa:deadsnakes/ppa -y \
     && apt-get update
 
-# Instalar Python 3.11 + dependências
 RUN apt-get install -y --no-install-recommends \
     python3.11 \
     python3.11-dev \
