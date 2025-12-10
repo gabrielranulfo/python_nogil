@@ -15,6 +15,8 @@
 
 #docker compose build --force-rm
 
-docker compose build
+#rm -rf /home/users/grbcirillo/python_nogil/output
+
+docker compose build --no-cache
 
 docker compose run --rm -e SCALE_FACTOR=1.0 polars-benchmark bash -c "cd /root/polars-benchmark && export SCALE_FACTOR=1.0 && ./run.sh"
