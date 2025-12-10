@@ -11,7 +11,7 @@ RUN apt-get install -y --no-install-recommends \
     python3.11-dev \
     python3.11-venv \
     python3-pip \
-    openjdk-17-jdk && \
+    openjdk-17-jdk \
     build-essential \
     git \
     curl \
