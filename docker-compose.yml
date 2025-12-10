@@ -2,7 +2,7 @@ services:
   polars-benchmark:
     build:
       context: .
-      dockerfile: Dockerfile.ubuntu2404
+      dockerfile: Dockerfile.ubuntu2204
     container_name: polars-benchmark
     volumes:
       - ./output:/root/polars-benchmark/output
