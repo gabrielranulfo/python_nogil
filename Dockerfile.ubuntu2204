@@ -32,14 +32,16 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
 
 ENV SCALE_FACTOR=1.0
 
-# Clonar repositório
+# Clonar ou atualizar repositório
 RUN cd /root && \
+    rm -rf polars-benchmark && \
     git clone https://github.com/gabrielranulfo/polars-benchmark.git && \
     cd polars-benchmark && \
-    git checkout mestrado && \
-    pip3 install -r requirements.in && \
-    pip3 install psutil polars-lts-cpu
+    git checkout mestrado
 
 WORKDIR /root/polars-benchmark
+
+# Instalar dependências na mesma camada
+RUN pip3 install psutil polars-lts-cpu
 
 CMD ["/bin/bash"]
