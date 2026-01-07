@@ -1,0 +1,191 @@
+Slurm CPUs: 8
+Slurm Memória: 61440
+Execução 1/50
+#1 [internal] load local bake definitions
+#1 reading from stdin 644B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.ubuntu2204
+#2 transferring dockerfile: 1.31kB 0.0s done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:22.04
+#3 DONE 1.2s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 245B done
+#4 DONE 0.0s
+
+#5 [1/7] FROM docker.io/library/ubuntu:22.04@sha256:104ae83764a5119017b8e8d6218fa0832b09df65aae7d5a6de29a85d813da2fb
+#5 DONE 0.0s
+
+#6 [2/7] RUN apt-get update && apt-get install -y software-properties-common     && add-apt-repository ppa:deadsnakes/ppa -y     && apt-get update
+#6 CACHED
+
+#7 [3/7] RUN apt-get install -y --no-install-recommends     python3.11     python3.11-dev     python3.11-venv     python3-pip     openjdk-17-jdk     build-essential     git     curl     wget     vim     ca-certificates     libssl-dev     libffi-dev     libsqlite3-dev     libbz2-dev     liblzma-dev     zlib1g-dev     && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [4/7] RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1     && update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+#8 CACHED
+
+#9 [5/7] RUN cd /root &&     rm -rf polars-benchmark &&     git clone https://github.com/gabrielranulfo/polars-benchmark.git &&     cd polars-benchmark &&     git checkout mestrado
+#9 0.217 Cloning into 'polars-benchmark'...
+#9 1.077 Switched to a new branch 'mestrado'
+#9 1.077 Branch 'mestrado' set up to track remote branch 'mestrado' from 'origin'.
+#9 DONE 1.1s
+
+#10 [6/7] WORKDIR /root/polars-benchmark
+#10 DONE 0.0s
+
+#11 [7/7] RUN pip3 install psutil polars-lts-cpu
+#11 2.412 Collecting psutil
+#11 2.526   Downloading psutil-7.2.1-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (154 kB)
+#11 2.570      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 154.7/154.7 KB 3.7 MB/s eta 0:00:00
+#11 2.998 Collecting polars-lts-cpu
+#11 3.013   Downloading polars_lts_cpu-1.33.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (39.6 MB)
+#11 3.937      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 39.6/39.6 MB 43.2 MB/s eta 0:00:00
+#11 4.370 Installing collected packages: psutil, polars-lts-cpu
+#11 5.957 Successfully installed polars-lts-cpu-1.33.1 psutil-7.2.1
+#11 5.958 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#11 DONE 6.5s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 1.7s done
+#12 writing image sha256:f4d98dcb91d9a95b67036023f34a718b39f495149c9a7a085db1afc1285b13ef done
+#12 naming to docker.io/library/python_nogil-polars-benchmark-8c60g done
+#12 DONE 1.7s
+
+#13 resolving provenance for metadata file
+#13 DONE 0.0s
+python3 -m venv .venv
+make install-deps
+make[1]: Entering directory '/root/polars-benchmark'
+.venv/bin/python -m pip install --upgrade uv
+Collecting uv
+  Downloading uv-0.9.22-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+Downloading uv-0.9.22-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (22.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 22.2/22.2 MB 63.4 MB/s eta 0:00:00
+Installing collected packages: uv
+Successfully installed uv-0.9.22
+.venv/bin/uv pip install --compile -r requirements.txt
+.venv/bin/uv pip install --compile -r requirements-dev.txt
+make[1]: Leaving directory '/root/polars-benchmark'
+make -C tpch-dbgen dbgen
+make[1]: Entering directory '/root/polars-benchmark/tpch-dbgen'
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o build.o build.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o driver.o driver.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o bm_utils.o bm_utils.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o rnd.o rnd.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o print.o print.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o load_stub.o load_stub.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o bcd2.o bcd2.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o speed_seed.o speed_seed.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o text.o text.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o permute.o permute.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o rng64.o rng64.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64 -O -o dbgen build.o driver.o bm_utils.o rnd.o print.o load_stub.o bcd2.o speed_seed.o text.o permute.o rng64.o -lm
+make[1]: Leaving directory '/root/polars-benchmark/tpch-dbgen'
+cd tpch-dbgen && ./dbgen -vf -s 1.0 && cd ..
+mkdir -p "data/tables/scale-1.0"
+mv tpch-dbgen/*.tbl data/tables/scale-1.0/
+.venv/bin/python -m scripts.prepare_data
+Processing table: customer
+Processing table: lineitem
+Processing table: nation
+Processing table: orders
+Processing table: part
+Processing table: partsupp
+Processing table: region
+Processing table: supplier
+rm -rf data/tables/scale-1.0/*.tbl
+.venv/bin/python -m queries.duckdb
+{"scale_factor":1.0,"paths":{"answers":"data/answers","tables":"data/tables","timings":"output/run","timings_filename":"timings.csv","plots":"output/plot"},"plot":{"show":false,"n_queries":7,"y_limit":null},"run":{"io_type":"parquet","log_timings":true,"show_results":false,"check_results":false,"polars_show_plan":false,"polars_eager":false,"polars_streaming":false,"modin_memory":8000000000,"spark_driver_memory":"2g","spark_executor_memory":"1g","spark_log_level":"ERROR","include_io":true},"dataset_base_dir":"data/tables/scale-1.0"}
+Execução 2/50
+python3 -m venv .venv
+make install-deps
+make[1]: Entering directory '/root/polars-benchmark'
+.venv/bin/python -m pip install --upgrade uv
+Collecting uv
+  Downloading uv-0.9.22-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+Downloading uv-0.9.22-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (22.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 22.2/22.2 MB 56.4 MB/s eta 0:00:00
+Installing collected packages: uv
+Successfully installed uv-0.9.22
+.venv/bin/uv pip install --compile -r requirements.txt
+.venv/bin/uv pip install --compile -r requirements-dev.txt
+make[1]: Leaving directory '/root/polars-benchmark'
+make -C tpch-dbgen dbgen
+make[1]: Entering directory '/root/polars-benchmark/tpch-dbgen'
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o build.o build.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o driver.o driver.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o bm_utils.o bm_utils.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o rnd.o rnd.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o print.o print.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o load_stub.o load_stub.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o bcd2.o bcd2.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o speed_seed.o speed_seed.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o text.o text.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o permute.o permute.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o rng64.o rng64.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64 -O -o dbgen build.o driver.o bm_utils.o rnd.o print.o load_stub.o bcd2.o speed_seed.o text.o permute.o rng64.o -lm
+make[1]: Leaving directory '/root/polars-benchmark/tpch-dbgen'
+cd tpch-dbgen && ./dbgen -vf -s 1.0 && cd ..
+mkdir -p "data/tables/scale-1.0"
+mv tpch-dbgen/*.tbl data/tables/scale-1.0/
+.venv/bin/python -m scripts.prepare_data
+Processing table: customer
+Processing table: lineitem
+Processing table: nation
+Processing table: orders
+Processing table: part
+Processing table: partsupp
+Processing table: region
+Processing table: supplier
+rm -rf data/tables/scale-1.0/*.tbl
+.venv/bin/python -m queries.duckdb
+{"scale_factor":1.0,"paths":{"answers":"data/answers","tables":"data/tables","timings":"output/run","timings_filename":"timings.csv","plots":"output/plot"},"plot":{"show":false,"n_queries":7,"y_limit":null},"run":{"io_type":"parquet","log_timings":true,"show_results":false,"check_results":false,"polars_show_plan":false,"polars_eager":false,"polars_streaming":false,"modin_memory":8000000000,"spark_driver_memory":"2g","spark_executor_memory":"1g","spark_log_level":"ERROR","include_io":true},"dataset_base_dir":"data/tables/scale-1.0"}
+Execução 3/50
+python3 -m venv .venv
+make install-deps
+make[1]: Entering directory '/root/polars-benchmark'
+.venv/bin/python -m pip install --upgrade uv
+Collecting uv
+  Downloading uv-0.9.22-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+Downloading uv-0.9.22-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (22.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 22.2/22.2 MB 57.0 MB/s eta 0:00:00
+Installing collected packages: uv
+Successfully installed uv-0.9.22
+.venv/bin/uv pip install --compile -r requirements.txt
+.venv/bin/uv pip install --compile -r requirements-dev.txt
+make[1]: Leaving directory '/root/polars-benchmark'
+make -C tpch-dbgen dbgen
+make[1]: Entering directory '/root/polars-benchmark/tpch-dbgen'
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o build.o build.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o driver.o driver.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o bm_utils.o bm_utils.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o rnd.o rnd.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o print.o print.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o load_stub.o load_stub.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o bcd2.o bcd2.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o speed_seed.o speed_seed.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o text.o text.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o permute.o permute.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64   -c -o rng64.o rng64.c
+gcc -g -DDBNAME=\"dss\" -DLINUX -DVECTORWISE -DTPCH -DRNG_TEST -D_FILE_OFFSET_BITS=64 -O -o dbgen build.o driver.o bm_utils.o rnd.o print.o load_stub.o bcd2.o speed_seed.o text.o permute.o rng64.o -lm
+make[1]: Leaving directory '/root/polars-benchmark/tpch-dbgen'
+cd tpch-dbgen && ./dbgen -vf -s 1.0 && cd ..
+mkdir -p "data/tables/scale-1.0"
+mv tpch-dbgen/*.tbl data/tables/scale-1.0/
+.venv/bin/python -m scripts.prepare_data
+Processing table: customer
+Processing table: lineitem
+Processing table: nation
+Processing table: orders
+Processing table: part
+Processing table: partsupp
+Processing table: region
+Processing table: supplier
+rm -rf data/tables/scale-1.0/*.tbl
+.venv/bin/python -m queries.duckdb
+{"scale_factor":1.0,"paths":{"answers":"data/answers","tables":"data/tables","timings":"output/run","timings_filename":"timings.csv","plots":"output/plot"},"plot":{"show":false,"n_queries":7,"y_limit":null},"run":{"io_type":"parquet","log_timings":true,"show_results":false,"check_results":false,"polars_show_plan":false,"polars_eager":false,"polars_streaming":false,"modin_memory":8000000000,"spark_driver_memory":"2g","spark_executor_memory":"1g","spark_log_level":"ERROR","include_io":true},"dataset_base_dir":"data/tables/scale-1.0"}

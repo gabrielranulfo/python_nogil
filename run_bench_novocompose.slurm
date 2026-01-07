@@ -34,5 +34,5 @@ DOCKER_BUILDKIT=1 docker build \
 
 # Executar
 echo "Executando benchmark..."
-docker compose run --rm -e SCALE_FACTOR=10.0 $imagem bash -c "cd /root/polars-benchmark && export SCALE_FACTOR=10.0 && ./run.sh"
+docker compose run --rm -e SCALE_FACTOR=1.0 $imagem bash -c "cd /root/polars-benchmark && export SCALE_FACTOR=1.0 && ./run.sh"
 

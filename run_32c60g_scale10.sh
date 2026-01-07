@@ -6,8 +6,8 @@
 #SBATCH --cpus-per-task=32
 #SBATCH --mem=60G
 #SBATCH --time=10:00:00
-#SBATCH --output=polars_benchmark_32c60g_scale10_%x_%j.out
-#SBATCH --error=polars_benchmark_32c60g_scale10_%x_%j.err
+#SBATCH --output=%x_%j.out
+#SBATCH --error=%x_%j.err
 ulimit -v $((60 * 1024 * 1024))
 
 echo "Slurm CPUs: $SLURM_CPUS_PER_TASK"
@@ -22,8 +22,6 @@ do
     echo "Execução $i/$rep"
 
     docker compose run --rm \
-      --cpuset-cpus 0-31 \
-      --memory 60g \
       -e SCALE_FACTOR=$escala \
       $imagem \
       bash -c "cd /root/polars-benchmark && ./run.sh"
