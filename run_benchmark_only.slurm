@@ -26,7 +26,7 @@
 for i in {1..50}
 do
     echo "Execução $i/50"
-    docker compose run --rm -e SCALE_FACTOR=10.0 polars-benchmark bash -c "cd /root/polars-benchmark && ./run.sh"
+    docker compose run --cpuset-cpus 0-7 --rm -e SCALE_FACTOR=10.0 polars-benchmark bash -c "cd /root/polars-benchmark && ./run.sh"
 
     if [ $i -lt 50 ]; then
         sleep 30

@@ -1,9 +1,44 @@
 services:
-  polars-benchmark:
+  polars-benchmark-8c60g:
     build:
       context: .
       dockerfile: Dockerfile.ubuntu2204
-    container_name: polars-benchmark
+    container_name: polars-benchmark-8c60g
+    cpuset: "0-7"
+    mem_limit: 60g
+
+    volumes:
+      - ./output:/root/polars-benchmark/output
+    environment:
+      - SCALE_FACTOR=1.0
+    networks:
+      - python-network
+    stdin_open: true
+    tty: true
+
+  polars-benchmark-16c60g:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu2204
+    container_name: polars-benchmark-16c60g
+    cpuset: "0-15"
+    mem_limit: 60g
+    volumes:
+      - ./output:/root/polars-benchmark/output
+    environment:
+      - SCALE_FACTOR=1.0
+    networks:
+      - python-network
+    stdin_open: true
+    tty: true
+
+  polars-benchmark-32c60g:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu2204
+    container_name: polars-benchmark-32c60g
+    cpuset: "0-31"
+    mem_limit: 60g
     volumes:
       - ./output:/root/polars-benchmark/output
     environment:
