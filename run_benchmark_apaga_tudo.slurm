@@ -12,15 +12,13 @@
 
 # Limpar tudo antes de começar
 
-'''
+
 ulimit -v $((16 * 1024 * 1024)) 
 
-echo "SLURM_CPUS_PER_TASK=$SLURM_CPUS_PER_TASK"
-echo "SLURM_NTASKS=$SLURM_NTASKS"
-lscpu | grep "^CPU(s)"
-sleep 340
-'''
-
+#echo "SLURM_CPUS_PER_TASK=$SLURM_CPUS_PER_TASK"
+##echo "SLURM_NTASKS=$SLURM_NTASKS"
+#lscpu | grep "^CPU(s)"
+#sleep 340
 
 echo "Limpando cache Docker..."
 docker system prune -a --volumes -f
@@ -42,5 +40,5 @@ DOCKER_BUILDKIT=1 docker build \
 
 # Executar
 echo "Executando benchmark..."
-docker compose run --rm -e SCALE_FACTOR=10.0 polars-benchmark bash -c "cd /root/polars-benchmark && export SCALE_FACTOR=10.0 && ./run.sh"
+docker compose run --rm -e SCALE_FACTOR=1.0 polars-benchmark bash -c "cd /root/polars-benchmark && ./run.sh"
 
