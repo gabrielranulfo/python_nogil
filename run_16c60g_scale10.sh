@@ -50,6 +50,7 @@ do
       -e SPARK_DRIVER_CORES=$SPARK_DRIVER_CORES \
       -e SPARK_DEFAULT_PARALLELISM=$SPARK_DEFAULT_PARALLELISM \
       -e SPARK_SQL_SHUFFLE_PARTITIONS=$SPARK_SQL_SHUFFLE_PARTITIONS \
+      $imagem \
       bash -c "cd /root/polars-benchmark && ./run.sh"
 
     if [ $i -lt $rep ]; then
