@@ -12,7 +12,7 @@
 
 # Limpar tudo antes de começar
 
-export imagem="polars-benchmark-8c60g"
+export imagem="polars-benchmark-32c60g"
 export escala=1.0
 
 echo "Limpando cache Docker..."

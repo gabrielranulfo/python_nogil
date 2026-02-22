@@ -9,6 +9,9 @@ services:
 
     volumes:
       - ./output:/root/polars-benchmark/output
+      #- ./data:/root/polars-benchmark/data
+      - /home/users/grbcirillo/data/:/root/polars-benchmark/data
+
     environment:
       - SCALE_FACTOR=1.0
     networks:
@@ -23,8 +26,11 @@ services:
     container_name: polars-benchmark-16c60g
     cpuset: "0-15"
     mem_limit: 60g
+
     volumes:
       - ./output:/root/polars-benchmark/output
+      - /home/users/grbcirillo/data/:/root/polars-benchmark/data
+
     environment:
       - SCALE_FACTOR=1.0
     networks:
@@ -39,8 +45,11 @@ services:
     container_name: polars-benchmark-32c60g
     cpuset: "0-31"
     mem_limit: 60g
+
     volumes:
       - ./output:/root/polars-benchmark/output
+      - /home/users/grbcirillo/data/:/root/polars-benchmark/data
+
     environment:
       - SCALE_FACTOR=1.0
     networks:
