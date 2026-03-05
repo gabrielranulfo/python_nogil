@@ -13,7 +13,7 @@
 # Limpar tudo antes de começar
 
 export imagem="polars-benchmark-32c60g"
-export escala=100.0
+export escala=1.0
 
 echo "Limpando cache Docker..."
 docker system prune -a --volumes -f
