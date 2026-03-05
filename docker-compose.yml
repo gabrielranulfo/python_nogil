@@ -1,4 +1,25 @@
+#FAZER benchs de escala 100  e só por ultimofazer esse aqui de 1 core (rodar o  run_novocompose.sh com o SCALE_FACTOR=100.0 e depois as queries de 10.0 e 1.0)
+
 services:
+  polars-benchmark-1c60g:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu2204
+    container_name: polars-benchmark-1c60g
+    cpuset: "0"
+    mem_limit: 60g
+
+    volumes:
+      - ./output:/root/polars-benchmark/output
+      - ./data:/root/polars-benchmark/data
+
+    environment:
+      - SCALE_FACTOR=1.0
+    networks:
+      - python-network
+    stdin_open: true
+    tty: true
+    
   polars-benchmark-8c60g:
     build:
       context: .
@@ -9,8 +30,7 @@ services:
 
     volumes:
       - ./output:/root/polars-benchmark/output
-      #- ./data:/root/polars-benchmark/data
-      - /home/users/grbcirillo/data/:/root/polars-benchmark/data
+      - ./data:/root/polars-benchmark/data
 
     environment:
       - SCALE_FACTOR=1.0
@@ -29,7 +49,7 @@ services:
 
     volumes:
       - ./output:/root/polars-benchmark/output
-      - /home/users/grbcirillo/data/:/root/polars-benchmark/data
+      - ./data:/root/polars-benchmark/data
 
     environment:
       - SCALE_FACTOR=1.0
@@ -48,7 +68,7 @@ services:
 
     volumes:
       - ./output:/root/polars-benchmark/output
-      - /home/users/grbcirillo/data/:/root/polars-benchmark/data
+      - ./data:/root/polars-benchmark/data
 
     environment:
       - SCALE_FACTOR=1.0

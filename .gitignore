@@ -14,3 +14,4 @@ output/*
 *.out
 *.err
 *.log
+data/*
