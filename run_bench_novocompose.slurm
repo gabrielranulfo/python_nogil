@@ -13,7 +13,7 @@
 # Limpar tudo antes de começar
 
 export imagem="polars-benchmark-32c60g"
-export escala=1.0
+export escala=100.0
 
 echo "Limpando cache Docker..."
 docker system prune -a --volumes -f
@@ -35,5 +35,11 @@ DOCKER_BUILDKIT=1 docker build \
 
 # Executar
 echo "Executando benchmark..."
-docker compose run --rm -e SCALE_FACTOR=$escala $imagem bash -c "cd /root/polars-benchmark && ./run.sh"
+#docker compose run --rm -e SCALE_FACTOR=$escala $imagem bash -c "cd /root/polars-benchmark && ./run.sh"
+
+docker compose run --rm \
+  -e SCALE_FACTOR=$escala \
+  -e comando="make run-all" \
+  $imagem \
+  bash -c "cd /root/polars-benchmark && ./run.sh"
 
