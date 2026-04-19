@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --job-name=polars_benchmark_32c60g_scale01
+#SBATCH --job-name=polars_benchmark_8c60g_scale50
 #SBATCH --partition=draco
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=32
+#SBATCH --cpus-per-task=8
 #SBATCH --mem=60G
 #SBATCH --time=20:00:00
 #SBATCH --output=%x_%j.out
@@ -13,22 +13,25 @@ ulimit -v $((60 * 1024 * 1024))
 echo "Slurm CPUs: $SLURM_CPUS_PER_TASK"
 echo "Slurm Memória: $SLURM_MEM_PER_NODE"
 
-export escala=1.0
-export rep=50
-export imagem="polars-benchmark-32c60g"
+export SPARK_DRIVER_MEMORY='40g'
+export SPARK_EXECUTOR_MEMORY='10g'
 
-export POLARS_MAX_THREADS=32
+export escala=50.0
+export rep=50
+export imagem="polars-benchmark-8c60g"
+
+export POLARS_MAX_THREADS=8
 export DASK_NUM_WORKERS=1
-export DASK_THREADS_PER_WORKER=32
-export OMP_NUM_THREADS=1
-export DUCKDB_THREADS=32
-export DUCKDB_EXTERNAL_THREADS=32
-export DUCKDB_ASYNC_IO_THREADS=16
-export SPARK_EXECUTOR_CORES=32
+export DASK_THREADS_PER_WORKER=8
+export OMP_NUM_THREADS=1  
+export DUCKDB_THREADS=8
+export DUCKDB_EXTERNAL_THREADS=8
+export DUCKDB_ASYNC_IO_THREADS=4
+export SPARK_EXECUTOR_CORES=8
 export SPARK_EXECUTOR_INSTANCES=1
-export SPARK_DRIVER_CORES=32
-export SPARK_DEFAULT_PARALLELISM=256
-export SPARK_SQL_SHUFFLE_PARTITIONS=256
+export SPARK_DRIVER_CORES=8
+export SPARK_DEFAULT_PARALLELISM=64  # 8 cores * 8 partitions per core
+export SPARK_SQL_SHUFFLE_PARTITIONS=64
 
 for ((i=1; i<=rep; i++))
 do
@@ -49,6 +52,9 @@ do
       -e SPARK_DRIVER_CORES=$SPARK_DRIVER_CORES \
       -e SPARK_DEFAULT_PARALLELISM=$SPARK_DEFAULT_PARALLELISM \
       -e SPARK_SQL_SHUFFLE_PARTITIONS=$SPARK_SQL_SHUFFLE_PARTITIONS \
+      -e comando="make run-all" \
+      -e SPARK_DRIVER_MEMORY=$SPARK_DRIVER_MEMORY \
+      -e SPARK_EXECUTOR_MEMORY=$SPARK_EXECUTOR_MEMORY \
       $imagem \
       bash -c "cd /root/polars-benchmark && ./run.sh"
 

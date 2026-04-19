@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=polars_benchmark_32c60g_scale100
+#SBATCH --job-name=polars_benchmark_32c60g_scale50
 #SBATCH --partition=draco
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -8,13 +8,15 @@
 #SBATCH --time=20:00:00
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
-
 ulimit -v $((60 * 1024 * 1024))
 
 echo "Slurm CPUs: $SLURM_CPUS_PER_TASK"
 echo "Slurm Memória: $SLURM_MEM_PER_NODE"
 
-export escala=100.0
+export SPARK_DRIVER_MEMORY='40g'
+export SPARK_EXECUTOR_MEMORY='10g'
+
+export escala=50.0
 export rep=50
 export imagem="polars-benchmark-32c60g"
 
@@ -25,17 +27,11 @@ export OMP_NUM_THREADS=1
 export DUCKDB_THREADS=32
 export DUCKDB_EXTERNAL_THREADS=32
 export DUCKDB_ASYNC_IO_THREADS=16
-
-#export SPARK_EXECUTOR_CORES=32
-#export SPARK_EXECUTOR_INSTANCES=1
-#export SPARK_DRIVER_CORES=32
-#
-#export SPARK_DEFAULT_PARALLELISM=4
-#export SPARK_SQL_SHUFFLE_PARTITIONS=4
-#
-## 🔧 AJUSTE CRÍTICO PARA EVITAR OOM NA LEITURA DO PARQUET
-#export SPARK_SQL_FILES_MAXPARTITIONBYTES=67108864
-#export SPARK_SQL_FILES_OPEN_COST_IN_BYTES=67108864
+export SPARK_EXECUTOR_CORES=32
+export SPARK_EXECUTOR_INSTANCES=1
+export SPARK_DRIVER_CORES=32
+export SPARK_DEFAULT_PARALLELISM=256
+export SPARK_SQL_SHUFFLE_PARTITIONS=256
 
 for ((i=1; i<=rep; i++))
 do
@@ -51,7 +47,14 @@ do
       -e DUCKDB_THREADS=$DUCKDB_THREADS \
       -e DUCKDB_EXTERNAL_THREADS=$DUCKDB_EXTERNAL_THREADS \
       -e DUCKDB_ASYNC_IO_THREADS=$DUCKDB_ASYNC_IO_THREADS \
-      -e comando="make run-pandas" \
+      -e SPARK_EXECUTOR_CORES=$SPARK_EXECUTOR_CORES \
+      -e SPARK_EXECUTOR_INSTANCES=$SPARK_EXECUTOR_INSTANCES \
+      -e SPARK_DRIVER_CORES=$SPARK_DRIVER_CORES \
+      -e SPARK_DEFAULT_PARALLELISM=$SPARK_DEFAULT_PARALLELISM \
+      -e SPARK_SQL_SHUFFLE_PARTITIONS=$SPARK_SQL_SHUFFLE_PARTITIONS \
+      -e comando="make run-all" \
+      -e SPARK_DRIVER_MEMORY=$SPARK_DRIVER_MEMORY \
+      -e SPARK_EXECUTOR_MEMORY=$SPARK_EXECUTOR_MEMORY \
       $imagem \
       bash -c "cd /root/polars-benchmark && ./run.sh"
 

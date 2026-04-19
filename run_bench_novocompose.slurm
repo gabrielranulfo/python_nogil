@@ -3,17 +3,21 @@
 #SBATCH --job-name=polars_benchmark
 #SBATCH --partition=draco
 #SBATCH --nodes=1
-#SBATCH --ntasks=4
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=16G
-#SBATCH --time=10:00:00
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=32
+#SBATCH --mem=60G
+#SBATCH --time=20:00:00
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
+ulimit -v $((60 * 1024 * 1024))
 
 # Limpar tudo antes de começar
 
+export SPARK_DRIVER_MEMORY='40g'
+export SPARK_EXECUTOR_MEMORY='10g'
+
 export imagem="polars-benchmark-32c60g"
-export escala=100.0
+export escala=50.0
 
 echo "Limpando cache Docker..."
 docker system prune -a --volumes -f
@@ -35,11 +39,16 @@ DOCKER_BUILDKIT=1 docker build \
 
 # Executar
 echo "Executando benchmark..."
-#docker compose run --rm -e SCALE_FACTOR=$escala $imagem bash -c "cd /root/polars-benchmark && ./run.sh"
-
 docker compose run --rm \
-  -e SCALE_FACTOR=$escala \
-  -e comando="make run-all" \
-  $imagem \
-  bash -c "cd /root/polars-benchmark && ./run.sh"
+    -e SCALE_FACTOR=$escala \
+    -e comando="make run-pyspark run-polars run-pandas run-duckdb run-dask" \
+    -e SPARK_DRIVER_MEMORY=$SPARK_DRIVER_MEMORY \
+    -e SPARK_EXECUTOR_MEMORY=$SPARK_EXECUTOR_MEMORY \
+    $imagem bash -c "cd /root/polars-benchmark && ./run.sh"
+
+#docker compose run --rm \
+#  -e SCALE_FACTOR=$escala \
+#  -e comando="make run-polars" \
+#  $imagem \
+#  bash -c "cd /root/polars-benchmark && ./run.sh"
 
